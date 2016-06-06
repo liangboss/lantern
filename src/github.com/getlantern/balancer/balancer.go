@@ -72,7 +72,7 @@ func (b *Balancer) OnRequest(req *http.Request) {
 // error.
 func (b *Balancer) Dial(network, addr string) (net.Conn, error) {
 	now := time.Now()
-	lastDialTime := time.Unix(atomic.SwapInt64(&b.lastDialTime, now.Unix()), 0)
+	lastDialTime := time.Unix(0, atomic.SwapInt64(&b.lastDialTime, now.UnixNano()))
 	idlePeriod := now.Sub(lastDialTime)
 	if idlePeriod > recheckAfterIdleFor {
 		log.Debugf("Balancer idle for %s, start checking all dialers", idlePeriod)
